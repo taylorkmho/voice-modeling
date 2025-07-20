@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { BiSolidMicrophone, BiX } from "react-icons/bi";
 import { AnimatePresence, motion } from "motion/react";
 import { cn } from "@/lib/utils";
+import { FiCheck, FiTrash2 } from "react-icons/fi";
 
 interface AudioVisualizerProps {
   className?: string;
@@ -137,28 +138,38 @@ export function AudioVisualizer({
         )}
         onClick={isListening ? stopListening : undefined}
       >
-        <AnimatePresence>
-          {isListening && (
-            <motion.button
-              key="closer"
-              initial={{ opacity: 0, x: -10 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -10 }}
-              transition={{ duration: 0.2 }}
-              className="absolute top-1/2 left-3 -translate-y-1/2 rounded-xl bg-blue-300/10 p-1 text-blue-200"
-              onClick={() => {
-                setIsListening(false);
-              }}
-            >
-              <BiX className="size-6" />
-            </motion.button>
-          )}
-        </AnimatePresence>
+        <div className="absolute top-1/2 left-3 flex -translate-y-1/2 gap-2">
+          <motion.button
+            key="delete"
+            initial={{ opacity: 0, x: -10 }}
+            animate={
+              isListening ? { opacity: 1, x: 0 } : { opacity: 0, x: -10 }
+            }
+            exit={{ opacity: 0, x: -10 }}
+            transition={{ duration: 0.2 }}
+            className="rounded-xl bg-blue-300/10 p-2 text-blue-200 hover:bg-red-500/50 hover:text-red-200 active:bg-red-500/30"
+          >
+            <FiTrash2 className="size-5" />
+          </motion.button>
+          <motion.button
+            key="save"
+            initial={{ opacity: 0, x: -10 }}
+            animate={
+              isListening ? { opacity: 1, x: 0 } : { opacity: 0, x: -10 }
+            }
+            exit={{ opacity: 0, x: -10 }}
+            transition={{ duration: 0.2, delay: isListening ? 0.1 : 0 }}
+            className="rounded-xl bg-blue-300/10 p-2 text-blue-200 hover:bg-green-500/50 hover:text-green-200 active:bg-green-500/30"
+          >
+            <FiCheck className="size-5" />
+          </motion.button>
+        </div>
+
         <div className="relative">
           {/* Volume Meter */}
           {isListening && (
             <div className="absolute top-1/2 -left-4 flex -translate-x-full -translate-y-1/2 items-center gap-4">
-              {volumeHistory.slice(-11).map((vol, index) => (
+              {volumeHistory.slice(-8).map((vol, index) => (
                 <motion.div
                   key={`volume-${index}`}
                   className="w-1 rounded-full bg-blue-400"
