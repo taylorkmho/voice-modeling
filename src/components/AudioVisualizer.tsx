@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
-import { BiSolidMicrophone } from "react-icons/bi";
-import { motion } from "motion/react";
+import { BiSolidMicrophone, BiX } from "react-icons/bi";
+import { AnimatePresence, motion } from "motion/react";
 import { cn } from "@/lib/utils";
 
 interface AudioVisualizerProps {
@@ -132,24 +132,40 @@ export function AudioVisualizer({
 
       <button
         className={cn(
-          "bg-muted flex min-w-80 items-center justify-end rounded-3xl p-4",
+          "bg-muted relative flex min-w-80 items-center justify-end rounded-3xl p-4",
           isListening && "bg-blue-400/20"
         )}
         onClick={isListening ? stopListening : undefined}
       >
+        <AnimatePresence>
+          {isListening && (
+            <motion.button
+              key="closer"
+              initial={{ opacity: 0, x: -10 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -10 }}
+              transition={{ duration: 0.2 }}
+              className="absolute top-1/2 left-3 -translate-y-1/2 rounded-xl bg-blue-300/10 p-1 text-blue-200"
+              onClick={() => {
+                setIsListening(false);
+              }}
+            >
+              <BiX className="size-6" />
+            </motion.button>
+          )}
+        </AnimatePresence>
         <div className="relative">
           {/* Volume Meter */}
           {isListening && (
-            <div className="absolute top-1/2 left-0 flex -translate-x-[150%] -translate-y-1/2 items-center gap-1">
-              {volumeHistory.slice(-3).map((vol, index) => (
+            <div className="absolute top-1/2 -left-4 flex -translate-x-full -translate-y-1/2 items-center gap-4">
+              {volumeHistory.slice(-11).map((vol, index) => (
                 <motion.div
                   key={`volume-${index}`}
                   className="w-1 rounded-full bg-blue-400"
                   animate={{
-                    // 100% volume is 60px, 0% volume is 10px
-                    height: `${Math.max(10, vol * 60)}px`,
+                    height: `${Math.max(10, vol * 20)}px`,
                     opacity:
-                      vol < 0.4 ? 0.1 : vol > 0.6 ? 1 : (vol - 0.4) * 4.5,
+                      vol < 0.4 ? 0.1 : vol > 0.6 ? 0.5 : (vol - 0.4) * 4.5,
                   }}
                   transition={{
                     duration: 0.1,
@@ -159,6 +175,7 @@ export function AudioVisualizer({
               ))}
             </div>
           )}
+          {/* Microphone button */}
           <motion.button
             whileHover={isListening ? {} : { scale: 1.1 }}
             whileTap={{ scale: 0.8 }}
