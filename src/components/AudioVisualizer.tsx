@@ -1,4 +1,7 @@
 import { useEffect, useRef, useState } from "react";
+import { BiSolidMicrophone } from "react-icons/bi";
+import { motion } from "motion/react";
+import { cn } from "@/lib/utils";
 
 interface AudioVisualizerProps {
   className?: string;
@@ -93,54 +96,40 @@ export function AudioVisualizer({ className = "" }: AudioVisualizerProps) {
     };
   }, []);
 
-  // Calculate scale based on volume (1x to 3x)
-  const scale = 1 + volume * 2;
-
-  // Calculate color intensity based on volume
   const colorIntensity = Math.floor(volume * 255);
   const backgroundColor = `rgb(${colorIntensity}, ${100 + colorIntensity}, ${255})`;
+  const boxShadow = `0 0 ${20 + volume * 30}px ${backgroundColor}`;
 
   return (
-    <div className={`flex flex-col items-center gap-6 ${className}`}>
-      <div className="text-center">
-        <button
-          onClick={isListening ? stopListening : startListening}
-          className={`px-6 py-3 rounded-lg font-medium transition-colors ${
-            isListening
-              ? "bg-red-500 hover:bg-red-600 text-white"
-              : "bg-blue-500 hover:bg-blue-600 text-white"
-          }`}
-        >
-          {isListening ? "Stop Listening" : "Start Listening"}
-        </button>
-      </div>
-
+    <div
+      className={`flex flex-col items-center gap-6 border-2 border-indigo-500 ${className}`}
+    >
       {error && (
         <div className="rounded border border-red-400 bg-red-100 px-4 py-3 text-red-700">
           <strong>Error:</strong> {error}
         </div>
       )}
+      {Math.round(volume * 100)}
 
       <div className="flex flex-col items-center gap-4">
-        <div
-          className="flex h-12 w-12 items-center justify-center rounded-full font-bold text-white transition-all duration-100 ease-out"
-          style={{
-            transform: `scale(${scale})`,
+        <motion.button
+          whileHover={isListening ? {} : { scale: 1.1 }}
+          whileTap={{ scale: 0.8 }}
+          animate={{
             backgroundColor,
-            boxShadow: `0 0 ${20 + volume * 30}px ${backgroundColor}`,
+            boxShadow,
+            scale: isListening ? volume * 3 : 1,
           }}
-        />
-
-        {isListening && (
-          <div className="text-center">
-            <div className="w-12 h-2 bg-gray-200 rounded-full overflow-hidden">
-              <div
-                className="h-full bg-gradient-to-r from-blue-500 to-purple-500 transition-all duration-100"
-                style={{ width: `${volume * 100}%` }}
-              />
-            </div>
-          </div>
-        )}
+          className="flex h-12 w-12 items-center justify-center rounded-full font-bold text-white"
+          onClick={isListening ? stopListening : startListening}
+        >
+          <BiSolidMicrophone
+            className={cn(
+              "text-2xl opacity-100 transition-all duration-100 ease-out",
+              isListening && "translate-y-full opacity-0"
+            )}
+          />
+        </motion.button>
       </div>
     </div>
   );
