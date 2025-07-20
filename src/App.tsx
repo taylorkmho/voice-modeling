@@ -11,7 +11,7 @@ function App() {
           <ThemePicker />
         </header>
 
-        <main className="flex min-h-0 grow flex-col items-center gap-4 border-2 border-amber-500">
+        <main className="flex min-h-0 grow flex-col items-center justify-end gap-4 border-2 border-amber-500">
           <AudioVisualizer />
         </main>
       </div>
