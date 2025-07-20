@@ -130,19 +130,26 @@ export function AudioVisualizer({
         </div>
       )}
 
-      <div className="bg-muted flex min-w-80 items-center justify-end rounded-3xl p-4">
+      <button
+        className={cn(
+          "bg-muted flex min-w-80 items-center justify-end rounded-3xl p-4",
+          isListening && "bg-blue-400/20"
+        )}
+        onClick={isListening ? stopListening : undefined}
+      >
         <div className="relative">
           {/* Volume Meter */}
           {isListening && (
-            <div className="absolute top-1/2 left-0 flex -translate-x-full -translate-y-1/2 items-center gap-1">
-              {volumeHistory.slice(-40).map((vol, index) => (
+            <div className="absolute top-1/2 left-0 flex -translate-x-[150%] -translate-y-1/2 items-center gap-1">
+              {volumeHistory.slice(-3).map((vol, index) => (
                 <motion.div
                   key={`volume-${index}`}
-                  className="w-1 rounded-full bg-white"
+                  className="w-1 rounded-full bg-blue-400"
                   animate={{
                     // 100% volume is 60px, 0% volume is 10px
                     height: `${Math.max(10, vol * 60)}px`,
-                    opacity: vol * 0.5,
+                    opacity:
+                      vol < 0.4 ? 0.1 : vol > 0.6 ? 1 : (vol - 0.4) * 4.5,
                   }}
                   transition={{
                     duration: 0.1,
@@ -171,7 +178,7 @@ export function AudioVisualizer({
             />
           </motion.button>
         </div>
-      </div>
+      </button>
     </div>
   );
 }
