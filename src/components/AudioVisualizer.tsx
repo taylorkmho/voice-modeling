@@ -1,8 +1,12 @@
 import { useEffect, useRef, useState } from "react";
-import { BiSolidMicrophone, BiX } from "react-icons/bi";
-import { AnimatePresence, motion } from "motion/react";
+import { BiSolidMicrophone } from "react-icons/bi";
+import { motion } from "motion/react";
 import { cn } from "@/lib/utils";
 import { FiCheck, FiTrash2 } from "react-icons/fi";
+import {
+  AutosizeTextarea,
+  type AutosizeTextAreaRef,
+} from "./ui/autosize-textarea";
 
 interface AudioVisualizerProps {
   className?: string;
@@ -22,6 +26,7 @@ export function AudioVisualizer({
   const microphoneRef = useRef<MediaStreamAudioSourceNode | null>(null);
   const animationFrameRef = useRef<number | null>(null);
   const lastUpdateRef = useRef<number>(0);
+  const textareaRef = useRef<AutosizeTextAreaRef | null>(null);
 
   const startListening = async () => {
     try {
@@ -132,44 +137,57 @@ export function AudioVisualizer({
       )}
 
       <button
+        onClick={() => textareaRef.current?.textArea.focus()}
         className={cn(
-          "bg-muted relative flex min-w-80 items-center justify-end rounded-3xl p-4",
+          "bg-muted relative flex min-w-80 flex-col items-center justify-end rounded-3xl p-4",
           isListening && "bg-blue-400/20"
         )}
-        onClick={isListening ? stopListening : undefined}
       >
-        <div className="absolute top-1/2 left-3 flex -translate-y-1/2 gap-2">
-          <motion.button
-            key="delete"
-            initial={{ opacity: 0, x: -10 }}
-            animate={
-              isListening ? { opacity: 1, x: 0 } : { opacity: 0, x: -10 }
-            }
-            exit={{ opacity: 0, x: -10 }}
-            transition={{ duration: 0.2 }}
-            className="rounded-xl bg-blue-300/10 p-2 text-blue-200 hover:bg-red-500/50 hover:text-red-200 active:bg-red-500/30"
-          >
-            <FiTrash2 className="size-5" />
-          </motion.button>
-          <motion.button
-            key="save"
-            initial={{ opacity: 0, x: -10 }}
-            animate={
-              isListening ? { opacity: 1, x: 0 } : { opacity: 0, x: -10 }
-            }
-            exit={{ opacity: 0, x: -10 }}
-            transition={{ duration: 0.2, delay: isListening ? 0.1 : 0 }}
-            className="rounded-xl bg-blue-300/10 p-2 text-blue-200 hover:bg-green-500/50 hover:text-green-200 active:bg-green-500/30"
-          >
-            <FiCheck className="size-5" />
-          </motion.button>
-        </div>
-
-        <div className="relative">
+        <AutosizeTextarea
+          minHeight={1}
+          maxHeight={200}
+          className="resize-none p-0 text-lg"
+          ref={textareaRef}
+        />
+        <div className="relative flex w-full items-center justify-between">
+          <div className="flex gap-2">
+            <motion.button
+              key="delete"
+              initial={{ opacity: 0, x: -10 }}
+              animate={
+                isListening ? { opacity: 1, x: 0 } : { opacity: 0, x: -10 }
+              }
+              exit={{ opacity: 0, x: -10 }}
+              transition={{ duration: 0.2 }}
+              onClick={e => {
+                e.stopPropagation();
+                setIsListening(false);
+              }}
+              className="rounded-xl bg-blue-300/10 p-2 text-blue-200 hover:bg-red-500/50 hover:text-red-200 active:bg-red-500/30"
+            >
+              <FiTrash2 className="size-5" />
+            </motion.button>
+            <motion.button
+              key="save"
+              initial={{ opacity: 0, x: -10 }}
+              animate={
+                isListening ? { opacity: 1, x: 0 } : { opacity: 0, x: -10 }
+              }
+              exit={{ opacity: 0, x: -10 }}
+              transition={{ duration: 0.2, delay: isListening ? 0.1 : 0 }}
+              onClick={e => {
+                e.stopPropagation();
+                setIsListening(false);
+              }}
+              className="rounded-xl bg-blue-300/10 p-2 text-blue-200 hover:bg-green-500/50 hover:text-green-200 active:bg-green-500/30"
+            >
+              <FiCheck className="size-5" />
+            </motion.button>
+          </div>
           {/* Volume Meter */}
-          {isListening && (
-            <div className="absolute top-1/2 -left-4 flex -translate-x-full -translate-y-1/2 items-center gap-4">
-              {volumeHistory.slice(-8).map((vol, index) => (
+          <div className="flex items-end gap-2">
+            {isListening &&
+              volumeHistory.slice(-12).map((vol, index) => (
                 <motion.div
                   key={`volume-${index}`}
                   className="w-1 rounded-full bg-blue-400"
@@ -184,8 +202,7 @@ export function AudioVisualizer({
                   }}
                 />
               ))}
-            </div>
-          )}
+          </div>
           {/* Microphone button */}
           <motion.button
             whileHover={isListening ? {} : { scale: 1.1 }}
@@ -193,10 +210,17 @@ export function AudioVisualizer({
             animate={{
               backgroundColor,
               boxShadow,
-              scale: isListening ? volume * 3 : 1,
+              scale: isListening ? volume * 2 : 1,
             }}
             className="flex h-8 w-8 items-center justify-center rounded-full font-bold text-white"
-            onClick={isListening ? stopListening : startListening}
+            onClick={e => {
+              e.stopPropagation();
+              if (isListening) {
+                stopListening();
+              } else {
+                startListening();
+              }
+            }}
           >
             <BiSolidMicrophone
               className={cn(
