@@ -116,14 +116,14 @@ export function AudioVisualizer({ className = "" }: AudioVisualizerProps) {
       </div>
 
       {error && (
-        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+        <div className="rounded border border-red-400 bg-red-100 px-4 py-3 text-red-700">
           <strong>Error:</strong> {error}
         </div>
       )}
 
       <div className="flex flex-col items-center gap-4">
         <div
-          className="w-12 h-12 rounded-full flex items-center justify-center text-white font-bold transition-all duration-100 ease-out"
+          className="flex h-12 w-12 items-center justify-center rounded-full font-bold text-white transition-all duration-100 ease-out"
           style={{
             transform: `scale(${scale})`,
             backgroundColor,

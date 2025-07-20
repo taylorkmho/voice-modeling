@@ -6,18 +6,18 @@ function App() {
   const { theme, setTheme } = useTheme();
 
   return (
-    <div className="min-h-screen bg-background text-foreground p-8 border-2 border-red-500">
-      <div className="max-w-4xl mx-auto">
-        <div className="flex items-center justify-between mb-8">
+    <div className="bg-background text-foreground min-h-screen border-2 border-red-500">
+      <main className="mx-auto flex w-full max-w-4xl flex-col">
+        <div className="mb-8 flex items-center justify-between">
           <h1 className="text-3xl font-bold">Voice Modeling</h1>
           <div className="flex items-center gap-2">
-            <span className="text-sm text-muted-foreground">Theme:</span>
+            <span className="text-muted-foreground text-sm">Theme:</span>
             <select
               value={theme}
               onChange={e =>
                 setTheme(e.target.value as "light" | "dark" | "system")
               }
-              className="px-3 py-1 border border-border rounded-md bg-background text-foreground"
+              className="border-border bg-background text-foreground rounded-md border px-3 py-1"
             >
               <option value="light">Light</option>
               <option value="dark">Dark</option>
