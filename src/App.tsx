@@ -1,5 +1,5 @@
 import "./App.css";
-import { AudioVisualizer } from "./components/AudioVisualizer";
+import { ChatInput } from "./components/ChatInput";
 import { ThemePicker } from "./components/ThemePicker";
 
 function App() {
@@ -12,7 +12,7 @@ function App() {
         </header>
 
         <main className="flex min-h-0 grow flex-col items-center justify-end gap-4">
-          <AudioVisualizer />
+          <ChatInput />
         </main>
       </div>
     </div>

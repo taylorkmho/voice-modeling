@@ -9,15 +9,11 @@ import {
 } from "./ui/autosize-textarea";
 import { useAudioRecorder, useAudioVisualization } from "@/hooks";
 
-interface AudioVisualizerProps {
+interface ChatInputProps {
   className?: string;
-  samplingRate?: number; // FPS for volume updates (default: 20)
 }
 
-export function AudioVisualizer({
-  className = "",
-  samplingRate = 20,
-}: AudioVisualizerProps) {
+export function ChatInput({ className = "" }: ChatInputProps) {
   const textareaRef = useRef<AutosizeTextAreaRef | null>(null);
 
   const {
@@ -27,7 +23,7 @@ export function AudioVisualizer({
     error,
     startListening,
     stopListening,
-  } = useAudioRecorder({ samplingRate });
+  } = useAudioRecorder({ samplingRate: 20 });
 
   const { backgroundColor, boxShadow } = useAudioVisualization({ volume });
 
@@ -49,7 +45,7 @@ export function AudioVisualizer({
         <AutosizeTextarea
           minHeight={1}
           maxHeight={200}
-          className="resize-none p-0 text-lg"
+          className={cn("resize-none p-0 text-lg", isListening && "hidden")}
           ref={textareaRef}
         />
         <div className="relative flex w-full items-center justify-between">
