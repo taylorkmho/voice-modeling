@@ -7,7 +7,7 @@ function App() {
     <div className="bg-background text-foreground flex min-h-screen">
       <div className="mx-auto flex w-full max-w-4xl flex-col">
         <header className="flex items-center justify-between">
-          <h1 className="text-3xl font-bold">Voice Modeling</h1>
+          <h1 className="text-3xl font-bold">Voice Visualizer</h1>
           <ThemePicker />
         </header>
 
