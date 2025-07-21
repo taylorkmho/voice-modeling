@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { BiSolidMicrophone } from "react-icons/bi";
 import { motion } from "motion/react";
 import { cn } from "@/lib/utils";
@@ -8,6 +8,7 @@ import {
   type AutosizeTextAreaRef,
 } from "./ui/autosize-textarea";
 import { useAudioRecorder, useAudioVisualization } from "@/hooks";
+import { ChatInputContext } from "./ChatInputContext";
 
 interface ChatInputProps {
   className?: string;
@@ -15,6 +16,7 @@ interface ChatInputProps {
 
 export function ChatInput({ className = "" }: ChatInputProps) {
   const textareaRef = useRef<AutosizeTextAreaRef | null>(null);
+  const [context, setContext] = useState<{ type: string }[]>([]);
 
   const {
     isListening,
@@ -27,6 +29,16 @@ export function ChatInput({ className = "" }: ChatInputProps) {
 
   const { backgroundColor, boxShadow } = useAudioVisualization({ volume });
 
+  const addContext = (contextType: string) => {
+    if (!context.some(item => item.type === contextType)) {
+      setContext([...context, { type: contextType }]);
+    }
+  };
+
+  const removeContext = (index: number) => {
+    setContext(context.filter((_, i) => i !== index));
+  };
+
   return (
     <div className={`p-4 ${className}`}>
       {error && (
@@ -38,10 +50,17 @@ export function ChatInput({ className = "" }: ChatInputProps) {
       <button
         onClick={() => textareaRef.current?.textArea.focus()}
         className={cn(
-          "bg-muted relative flex min-w-80 flex-col items-center justify-end rounded-3xl p-4",
+          "bg-muted relative flex min-w-80 flex-col items-center justify-end gap-2 rounded-3xl p-4",
           isListening && "bg-blue-400/20"
         )}
       >
+        {/* Context Selector */}
+        <ChatInputContext
+          context={context}
+          onAddContext={addContext}
+          onRemoveContext={removeContext}
+        />
+
         <AutosizeTextarea
           minHeight={1}
           maxHeight={200}
@@ -77,6 +96,7 @@ export function ChatInput({ className = "" }: ChatInputProps) {
               onClick={e => {
                 e.stopPropagation();
                 stopListening();
+                setContext([...context, { type: "recording" }]);
               }}
               className="rounded-xl bg-blue-300/10 p-2 text-blue-200 hover:bg-green-500/50 hover:text-green-200 active:bg-green-500/30"
             >
@@ -116,6 +136,7 @@ export function ChatInput({ className = "" }: ChatInputProps) {
               e.stopPropagation();
               if (isListening) {
                 stopListening();
+                setContext([...context, { type: "recording" }]);
               } else {
                 startListening();
               }
