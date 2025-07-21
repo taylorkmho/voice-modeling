@@ -1,69 +1,69 @@
-# React + TypeScript + Vite
+# Voice Modeling
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Voice Modeling is a modern web app for recording, tagging, and organizing voice notes or audio snippets. It features a beautiful, responsive UI built with React, TypeScript, and Vite, and includes real-time audio visualization, context tagging, and a smooth user experience.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+This is an early build. You can simulate recording audio in your browser, add context tags to your recordings, and see a simple live volume visualization.
 
-## Expanding the ESLint configuration
+## Getting Started
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### Prerequisites
 
-```js
-export default tseslint.config([
-  globalIgnores(["dist"]),
-  {
-    files: ["**/*.{ts,tsx}"],
-    extends: [
-      // Other configs...
+- [Node.js](https://nodejs.org/) (v18 or newer recommended)
+- [pnpm](https://pnpm.io/) (recommended, but you can use npm or yarn if you prefer)
 
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
+### Installation
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ["./tsconfig.node.json", "./tsconfig.app.json"],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-]);
+1. **Clone the repository:**
+
+   ```sh
+   git clone https://github.com/taylorkmho/voice-modeling.git
+   cd voice-modeling
+   ```
+
+2. **Install dependencies:**
+   ```sh
+   pnpm install
+   ```
+
+### Running the App
+
+Start the development server:
+
+```sh
+pnpm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+This will launch the app at [http://localhost:5173](http://localhost:5173) (or another port if 5173 is in use).
 
-```js
-// eslint.config.js
-import reactX from "eslint-plugin-react-x";
-import reactDom from "eslint-plugin-react-dom";
+### Building for Production
 
-export default tseslint.config([
-  globalIgnores(["dist"]),
-  {
-    files: ["**/*.{ts,tsx}"],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs["recommended-typescript"],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ["./tsconfig.node.json", "./tsconfig.app.json"],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-]);
+To build the app for production:
+
+```sh
+pnpm run build
 ```
+
+To preview the production build locally:
+
+```sh
+pnpm run preview
+```
+
+### Linting and Formatting
+
+- **Lint code:** `pnpm run lint`
+- **Format code:** `pnpm run format`
+
+## Project Structure
+
+- `src/App.tsx` – Main app layout and theme picker
+- `src/components/ChatInput.tsx` – Audio recording and context tagging UI
+- `src/components/ChatInputContext.tsx` – Context tag selection and management
+- `src/hooks/` – Custom React hooks for audio recording and visualization
+- `src/lib/` – Utility functions
+
+## License
+
+MIT
