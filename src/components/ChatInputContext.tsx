@@ -40,7 +40,7 @@ export function ChatInputContext({
 
   return (
     <div className="flex w-full flex-col gap-2">
-      <div className="flex items-center justify-between">
+      {/* <div className="flex items-center justify-between">
         <span className="text-sm font-medium text-gray-300">Context</span>
         <motion.button
           whileHover={{ scale: 1.05 }}
@@ -54,10 +54,10 @@ export function ChatInputContext({
           <FiPlus className="size-3" />
           Add Context
         </motion.button>
-      </div>
+      </div> */}
 
       {/* Context Selector Dropdown */}
-      {showContextSelector && (
+      {/* {showContextSelector && (
         <motion.div
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
@@ -113,7 +113,7 @@ export function ChatInputContext({
             </div>
           </div>
         </motion.div>
-      )}
+      )} */}
 
       {/* Selected Context Tags */}
       <div className="flex flex-wrap gap-2">
